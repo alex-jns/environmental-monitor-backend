@@ -37,8 +37,8 @@ The collected data is stored in human readable reports and JSON files for furthe
 1. Clone the repository
 
 ```bash
-git clone <repo-url>
-cd <repo-directory>
+git clone https://github.com/alex-jns/environmental-monitor-backend.git
+cd environmental-monitor-backend
 ```
 
 2. Restore and build
@@ -51,7 +51,7 @@ dotnet build
 3. Run (replace `<path-to-project>` with the actual project file or solution)
 
 ```bash
-dotnet run --project <path-to-project>
+dotnet run --project "Environmental Monitor.csproj"
 ```
 
 ## Usage
