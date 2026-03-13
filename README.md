@@ -22,7 +22,7 @@ The collected data is stored in human readable reports and JSON files for furthe
 
 ## Requirements
 
-- .NET 10 SDK
+- Windows 10 or later (64-bit)
 
 ## Quick Start
 
