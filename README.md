@@ -22,13 +22,13 @@ The collected data is stored in human readable reports and JSON files for furthe
 
 ## Requirements
 
-- .NET 10 SDK
+- Windows 10 or later (64-bit)
 
 ## Quick Start
 
 # Option 1 - Download the release
 
-1. Download the latest release from the [Releases]() section of the repository.
+1. Download the latest release from the [Releases](https://github.com/alex-jns/environmental-monitor-backend/releases) section of the repository.
 2. Extract the downloaded archive to a desired location.
 3. Navigate to the extracted folder and run the executable file (e.g., `EnvironmentalMonitorBackend.exe`).
 
@@ -37,8 +37,8 @@ The collected data is stored in human readable reports and JSON files for furthe
 1. Clone the repository
 
 ```bash
-git clone <repo-url>
-cd <repo-directory>
+git clone https://github.com/alex-jns/environmental-monitor-backend.git
+cd environmental-monitor-backend
 ```
 
 2. Restore and build
@@ -51,7 +51,7 @@ dotnet build
 3. Run (replace `<path-to-project>` with the actual project file or solution)
 
 ```bash
-dotnet run --project <path-to-project>
+dotnet run --project "Environmental Monitor.csproj"
 ```
 
 ## Usage
