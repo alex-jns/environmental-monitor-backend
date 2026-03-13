@@ -26,13 +26,13 @@ The collected data is stored in human readable reports and JSON files for furthe
 
 ## Quick Start
 
-# Option 1 - Download the release
+### Option 1 - Download the release
 
 1. Download the latest release from the [Releases]() section of the repository.
 2. Extract the downloaded archive to a desired location.
 3. Navigate to the extracted folder and run the executable file (e.g., `EnvironmentalMonitorBackend.exe`).
 
-# Option 2 - Clone and run
+### Option 2 - Clone and run
 
 1. Clone the repository
 
