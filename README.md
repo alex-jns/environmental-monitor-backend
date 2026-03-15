@@ -104,7 +104,3 @@ dotnet run --project "Environmental Monitor.csproj"
 3. Verify that the OpenMeteo API is accessible and that the API parameters (latitude, longitude, time zone) are correctly configured.
 4. Ensure that the time interval and time range inputs are valid and in the correct format.
 5. Check for any file I/O issues when writing JSON files or generating reports, such as permission issues or insufficient disk space.
-
-## License
-
-Specify the license for the project (e.g., `MIT`, `Apache-2.0`, or a custom license).
