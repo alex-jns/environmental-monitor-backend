@@ -48,7 +48,7 @@ dotnet restore
 dotnet build
 ```
 
-3. Run (replace `<path-to-project>` with the actual project file or solution)
+3. Run
 
 ```bash
 dotnet run --project "Environmental Monitor.csproj"
