@@ -17,7 +17,24 @@ namespace Environmental_Monitor
             Logger logger = new Logger("logs/api.log");
 
             // Setting up the request
-            string requestUri = "https://api.open-meteo.com/v1/forecast?latitude=36.5951&longitude=-82.1887&timezone=America%2FNew_York&current=temperature_2m,relative_humidity_2m";
+            string requestUri = "https://api.open-meteo.com/v1/forecast?" +
+                "latitude=36.5951&" +
+                "longitude=-82.1887&" +
+                "current=temperature_2m," +
+                "relative_humidity_2m," +
+                "apparent_temperature," +
+                "is_day," +
+                "weather_code," +
+                "cloud_cover," +
+                "precipitation," +
+                "rain,showers," +
+                "snowfall," +
+                "wind_speed_10m," +
+                "wind_direction_10m&" +
+                "timezone=America%2FNew_York&" +
+                "forecast_days=1&" +
+                "wind_speed_unit=ms&" +
+                "precipitation_unit=inch";
             using HttpClient client = new HttpClient();
 
             // See below for a list of exceptions
@@ -45,6 +62,18 @@ namespace Environmental_Monitor
                 logger.Info($"Temp: {weather.current.temperature_2m} C");
                 logger.Info($"Temp: {weather.current.temperature_2m_fahrenheit} F");
                 logger.Info($"Humidity: {weather.current.relative_humidity_2m}%");
+                logger.Info($"Apparent Temp: {weather.current.apparent_temperature}%");
+                logger.Info($"Apparent Temp: {weather.current.apparent_temperature_farenheit}%");
+                logger.Info($"Is Day: {weather.current.is_day_yesorno}");
+                logger.Info($"Weather Code: {weather.current.weather_code}");
+                logger.Info($"Cloud Cover: {weather.current.cloud_cover}");
+                logger.Info($"Precipitation: {weather.current.precipitation} inches");
+                logger.Info($"Rain: {weather.current.rain} inches");
+                logger.Info($"Showers: {weather.current.showers} inches");
+                logger.Info($"Snowfall: {weather.current.snowfall} inches");
+                logger.Info($"Precipitation: {weather.current.precipitation} inches");
+                logger.Info($"Wind Speed: {weather.current.wind_speed_10m} miles per hour");
+                logger.Info($"Wind Direction: {weather.current.wind_direction_10m} degrees");
 
                 // Return the deserialized weather response
                 return weather;
