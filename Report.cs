@@ -89,6 +89,18 @@ namespace Environmental_Monitor
                 sb.AppendLine($"Outside Temp: {ApiWeather.current.temperature_2m} C");
                 sb.AppendLine($"Outside Temp: {ApiWeather.current.temperature_2m_fahrenheit} F");
                 sb.AppendLine($"Outside Humidity: {ApiWeather.current.relative_humidity_2m}%");
+                sb.AppendLine($"Apparent Temp: {ApiWeather.current.apparent_temperature}%");
+                sb.AppendLine($"Apparent Temp: {ApiWeather.current.apparent_temperature_farenheit}%");
+                sb.AppendLine($"Is Day: {ApiWeather.current.is_day_yesorno}");
+                sb.AppendLine($"Weather Code: {ApiWeather.current.weather_code}");
+                sb.AppendLine($"Cloud Cover: {ApiWeather.current.cloud_cover}");
+                sb.AppendLine($"Precipitation: {ApiWeather.current.precipitation} inches");
+                sb.AppendLine($"Rain: {ApiWeather.current.rain} inches");
+                sb.AppendLine($"Showers: {ApiWeather.current.showers} inches");
+                sb.AppendLine($"Snowfall: {ApiWeather.current.snowfall} inches");
+                sb.AppendLine($"Precipitation: {ApiWeather.current.precipitation} inches");
+                sb.AppendLine($"Wind Speed: {ApiWeather.current.wind_speed_10m} miles per hour");
+                sb.AppendLine($"Wind Direction: {ApiWeather.current.wind_direction_10m} degrees");
 
                 // Try to catch file I/O exceptions when writing the report, log any errors that occur
                 try { File.AppendAllText(reportFilePath, sb.ToString()); }
@@ -121,7 +133,17 @@ namespace Environmental_Monitor
                         temperature_2m = ApiWeather.current.temperature_2m,
                         temperature_2m_fahrenheit = ApiWeather.current.temperature_2m_fahrenheit,
                         relative_humidity_2m = ApiWeather.current.relative_humidity_2m,
-                        time = ApiWeather.current.time
+                        time = ApiWeather.current.time,
+                        apparent_temperature = ApiWeather.current.apparent_temperature,
+                        is_day_yesorno = ApiWeather.current.is_day_yesorno,
+                        weather_code = ApiWeather.current.weather_code,
+                        cloud_cover = ApiWeather.current.cloud_cover,
+                        precipitation = ApiWeather.current.precipitation,
+                        rain = ApiWeather.current.rain,
+                        showers = ApiWeather.current.showers,
+                        snowfall = ApiWeather.current.snowfall,
+                        wind_speed_10m = ApiWeather.current.wind_speed_10m,
+                        wind_direction_10m = ApiWeather.current.wind_direction_10m
                     }
                 };
 
