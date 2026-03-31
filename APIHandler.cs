@@ -17,7 +17,24 @@ namespace Environmental_Monitor
             Logger logger = new Logger("logs/api.log");
 
             // Setting up the request
-            string requestUri = "https://api.open-meteo.com/v1/forecast?latitude=36.5951&longitude=-82.1887&timezone=America%2FNew_York&current=temperature_2m,relative_humidity_2m";
+            string requestUri = "https://api.open-meteo.com/v1/forecast?" +
+                "latitude=36.5951&" +
+                "longitude=-82.1887&" +
+                "current=temperature_2m," +
+                "relative_humidity_2m," +
+                "apparent_temperature," +
+                "is_day," +
+                "weather_code," +
+                "cloud_cover," +
+                "precipitation," +
+                "rain,showers," +
+                "snowfall," +
+                "wind_speed_10m," +
+                "wind_direction_10m&" +
+                "timezone=America%2FNew_York&" +
+                "forecast_days=1&" +
+                "wind_speed_unit=ms&" +
+                "precipitation_unit=inch";
             using HttpClient client = new HttpClient();
 
             // See below for a list of exceptions
