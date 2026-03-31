@@ -62,6 +62,18 @@ namespace Environmental_Monitor
                 logger.Info($"Temp: {weather.current.temperature_2m} C");
                 logger.Info($"Temp: {weather.current.temperature_2m_fahrenheit} F");
                 logger.Info($"Humidity: {weather.current.relative_humidity_2m}%");
+                logger.Info($"Apparent Temp: {weather.current.apparent_temperature}%");
+                logger.Info($"Apparent Temp: {weather.current.apparent_temperature_farenheit}%");
+                logger.Info($"Is Day: {weather.current.is_day_yesorno}");
+                logger.Info($"Weather Code: {weather.current.weather_code}");
+                logger.Info($"Cloud Cover: {weather.current.cloud_cover}");
+                logger.Info($"Precipitation: {weather.current.precipitation} inches");
+                logger.Info($"Rain: {weather.current.rain} inches");
+                logger.Info($"Showers: {weather.current.showers} inches");
+                logger.Info($"Snowfall: {weather.current.snowfall} inches");
+                logger.Info($"Precipitation: {weather.current.precipitation} inches");
+                logger.Info($"Wind Speed: {weather.current.wind_speed_10m} miles per hour");
+                logger.Info($"Wind Direction: {weather.current.wind_direction_10m} degrees");
 
                 // Return the deserialized weather response
                 return weather;

@@ -63,7 +63,16 @@ namespace Environmental_Monitor
         /// <summary>
         /// 1 if the current time step has daylight, 0 at night.
         /// </summary>
-        public bool is_day { get; set; }
+        public int is_day { get; set; }
+
+        /// <summary>
+        /// Converts is_day into a string representation.
+        /// </summary>
+        public string is_day_yesorno
+        {
+            get { if (is_day == 1) { return "Yes"; } else { return "No"; } }
+            set { }
+        }
 
         /// <summary>
         /// Weather condition as a numeric code.
@@ -123,13 +132,13 @@ namespace Environmental_Monitor
 
         /// <summary>
         /// Wind speed at 10, 80, 120 or 180 meters above ground.
-        /// This project uses wind speed at 10 meters above ground.
+        /// This project uses wind speed at 10 meters above ground in miles per hour.
         /// </summary>
         public double wind_speed_10m { get; set; }
 
         /// <summary>
         /// Wind direction at 10, 80, 120 or 180 meters above ground.
-        /// This project uses wind speed at 10 meters above ground.
+        /// This project uses wind speed at 10 meters above ground using degrees for direction.
         /// </summary>
         public double wind_direction_10m { get; set; }
     }
