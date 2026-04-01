@@ -63,9 +63,10 @@ namespace Environmental_Monitor
                 logger.Info($"Temp: {weather.current.temperature_2m_fahrenheit} F");
                 logger.Info($"Humidity: {weather.current.relative_humidity_2m}%");
                 logger.Info($"Apparent Temp: {weather.current.apparent_temperature}%");
-                logger.Info($"Apparent Temp: {weather.current.apparent_temperature_farenheit}%");
+                logger.Info($"Apparent Temp: {weather.current.apparent_temperature_fahrenheit}%");
                 logger.Info($"Is Day: {weather.current.is_day_yesorno}");
                 logger.Info($"Weather Code: {weather.current.weather_code}");
+                logger.Info($"Weather Name: {weather.current.weather_name}");
                 logger.Info($"Cloud Cover: {weather.current.cloud_cover}");
                 logger.Info($"Precipitation: {weather.current.precipitation} inches");
                 logger.Info($"Rain: {weather.current.rain} inches");

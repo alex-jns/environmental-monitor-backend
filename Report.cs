@@ -90,9 +90,10 @@ namespace Environmental_Monitor
                 sb.AppendLine($"Outside Temp: {ApiWeather.current.temperature_2m_fahrenheit} F");
                 sb.AppendLine($"Outside Humidity: {ApiWeather.current.relative_humidity_2m}%");
                 sb.AppendLine($"Apparent Temp: {ApiWeather.current.apparent_temperature}%");
-                sb.AppendLine($"Apparent Temp: {ApiWeather.current.apparent_temperature_farenheit}%");
+                sb.AppendLine($"Apparent Temp: {ApiWeather.current.apparent_temperature_fahrenheit}%");
                 sb.AppendLine($"Is Day: {ApiWeather.current.is_day_yesorno}");
-                sb.AppendLine($"Weather Code: {ApiWeather.current.weather_code}: {ApiWeather.current.weather_name}");
+                sb.AppendLine($"Weather Code: {ApiWeather.current.weather_code}");
+                sb.AppendLine($"Weather Name: {ApiWeather.current.weather_name}");
                 sb.AppendLine($"Cloud Cover: {ApiWeather.current.cloud_cover}");
                 sb.AppendLine($"Precipitation: {ApiWeather.current.precipitation} inches");
                 sb.AppendLine($"Rain: {ApiWeather.current.rain} inches");
@@ -135,6 +136,7 @@ namespace Environmental_Monitor
                         relative_humidity_2m = ApiWeather.current.relative_humidity_2m,
                         time = ApiWeather.current.time,
                         apparent_temperature = ApiWeather.current.apparent_temperature,
+                        apparent_temperature_fahrenheit = ApiWeather.current.apparent_temperature_fahrenheit,
                         is_day_yesorno = ApiWeather.current.is_day_yesorno,
                         weather_code = ApiWeather.current.weather_code,
                         weather_name = ApiWeather.current.weather_name,

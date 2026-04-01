@@ -54,7 +54,7 @@ namespace Environmental_Monitor
         /// <summary>
         /// Converts apparent temperature from celsius to farenheit.
         /// </summary>
-        public double apparent_temperature_farenheit
+        public double apparent_temperature_fahrenheit
         {
             get { return (apparent_temperature * 9 / 5) + 32;  }
             set { }
