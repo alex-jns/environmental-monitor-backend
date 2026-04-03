@@ -31,11 +31,21 @@ namespace Environmental_Monitor
         /// <param name="weather">Represents the weather data received from the API response.</param>
         public Report(UdpMessage udpMessage, WeatherResponse weather)
         {
+            Logger logger = new Logger("logs/report.log");
+
             // Guard null values
-            if (udpMessage == null) { throw new NullReferenceException(nameof(udpMessage)); }
-            if (weather == null) { throw new NullReferenceException(nameof(weather)); }
-            if (weather.current == null) { throw new NullReferenceException(nameof(weather.current)); }
-            if (weather.current.time == null) { throw new NullReferenceException(nameof(weather.current.time)); }
+            try
+            {
+                if (udpMessage == null) { throw new NullReferenceException(nameof(udpMessage)); }
+                if (weather == null) { throw new NullReferenceException(nameof(weather)); }
+                if (weather.current == null) { throw new NullReferenceException(nameof(weather.current)); }
+                if (weather.current.time == null) { throw new NullReferenceException(nameof(weather.current.time)); }
+            }
+            catch (NullReferenceException ex)
+            {
+                logger.Error($"Null reference exception in Report constructor: {ex.Message}");
+                throw;
+            }
 
             // Assign to instance fields instead of declaring new local variables
             this.Message = udpMessage;
@@ -43,9 +53,9 @@ namespace Environmental_Monitor
 
             // Attempt to parse time from ISO 8601 to something readable
             try { this.Time = DateTime.Parse(weather.current.time); }
-            catch (FormatException ex) { throw new FormatException($"Time format exception: {ex.Message}"); }
-            catch (ArgumentNullException ex) { throw new ArgumentNullException($"Argument null exception: {ex.Message}"); }
-            catch (Exception ex) { throw new Exception($"Error parsing time: {ex.Message}"); }
+            catch (FormatException ex) { logger.Error($"Format exception in Report constructor: {ex.Message}"); return; }
+            catch (ArgumentNullException ex) { logger.Error($"Argument null exception in Report constructor: {ex.Message}"); return; }
+            catch (Exception ex) { logger.Error($"Exception in Report constructor: {ex.Message}"); return; }
         }
 
         /// <summary>
@@ -55,12 +65,20 @@ namespace Environmental_Monitor
         /// <param name="weather">Represents the weather data received from the API response.</param>
         public void GenerateReport()
         {
-            // Guard null values
-            if (Message == null) { throw new NullReferenceException(nameof(Message)); }
-            if (ApiWeather == null ) { throw new NullReferenceException(nameof(ApiWeather)); }
-            if (ApiWeather.current == null) { throw new NullReferenceException(nameof(ApiWeather.current)); }
-
             Logger logger = new Logger("logs/report.log");
+
+            // Guard null values
+            try
+            {
+                if (Message == null) { throw new NullReferenceException(nameof(Message)); }
+                if (ApiWeather == null) { throw new NullReferenceException(nameof(ApiWeather)); }
+                if (ApiWeather.current == null) { throw new NullReferenceException(nameof(ApiWeather.current)); }
+            }
+            catch (NullReferenceException ex)
+            {
+                logger.Error($"Null reference exception in GenerateReport: {ex.Message}");
+                return;
+            }
 
             // can probably delete this section later
             logger.Info($"[Time] {Time.ToString("f")}");
