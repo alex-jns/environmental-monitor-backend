@@ -161,7 +161,8 @@ namespace Environmental_Monitor
                     {
                         temperatureF = Message.temperatureF,
                         temperatureC = Message.temperatureC,
-                        humidity = Message.humidity
+                        humidity = Message.humidity,
+                        inside_summary = InsideSummary
                     },
                     outside = new
                     {
@@ -180,8 +181,7 @@ namespace Environmental_Monitor
                         showers = ApiWeather.current.showers,
                         snowfall = ApiWeather.current.snowfall,
                         wind_speed_10m = ApiWeather.current.wind_speed_10m,
-                        wind_direction_10m = ApiWeather.current.wind_direction_10m,
-                        inside_weather_summary = InsideSummary
+                        wind_direction_10m = ApiWeather.current.wind_direction_10m
                     }
                 };
 
