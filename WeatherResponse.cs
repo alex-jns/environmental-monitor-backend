@@ -185,5 +185,29 @@ namespace Environmental_Monitor
         /// This project uses wind speed at 10 meters above ground using degrees for direction.
         /// </summary>
         public double wind_direction_10m { get; set; }
+
+        /// <summary>
+        /// Splits the wind direction in degrees into 8 compass directions.
+        /// Note: Wind direction from the API is given in degrees,
+        /// where 0° corresponds to wind coming from the north, 90° from the east,
+        /// 180° from the south, and 270° from the west.
+        /// </summary>
+        public string wind_direction_10m_compass
+        {
+            get
+            {
+                // Defines the 45 degree cone for each compass direction.
+                if (wind_direction_10m >= 337.5 || wind_direction_10m < 22.5) return "North";
+                else if (wind_direction_10m >= 22.5 && wind_direction_10m < 67.5) return "Northeast";
+                else if (wind_direction_10m >= 67.5 && wind_direction_10m < 112.5) return "East";
+                else if (wind_direction_10m >= 112.5 && wind_direction_10m < 157.5) return "Southeast";
+                else if (wind_direction_10m >= 157.5 && wind_direction_10m < 202.5) return "South";
+                else if (wind_direction_10m >= 202.5 && wind_direction_10m < 247.5) return "Southwest";
+                else if (wind_direction_10m >= 247.5 && wind_direction_10m < 292.5) return "West";
+                else if (wind_direction_10m >= 292.5 && wind_direction_10m < 337.5) return "Northwest";
+                else return "Unknown";
+            }
+            set { }
+        }
     }
 }

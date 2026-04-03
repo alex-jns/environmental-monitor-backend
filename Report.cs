@@ -134,7 +134,7 @@ namespace Environmental_Monitor
                 sb.AppendLine($"Snowfall: {ApiWeather.current.snowfall} inches");
                 sb.AppendLine($"Precipitation: {ApiWeather.current.precipitation} inches");
                 sb.AppendLine($"Wind Speed: {ApiWeather.current.wind_speed_10m} miles per hour");
-                sb.AppendLine($"Wind Direction: {ApiWeather.current.wind_direction_10m} degrees");
+                sb.AppendLine($"Wind Direction: {ApiWeather.current.wind_direction_10m_compass} ({ApiWeather.current.wind_direction_10m} degrees)");
                 sb.AppendLine($"Inside Weather Summary: {InsideSummary}");
 
                 // Try to catch file I/O exceptions when writing the report, log any errors that occur
@@ -181,7 +181,8 @@ namespace Environmental_Monitor
                         showers = ApiWeather.current.showers,
                         snowfall = ApiWeather.current.snowfall,
                         wind_speed_10m = ApiWeather.current.wind_speed_10m,
-                        wind_direction_10m = ApiWeather.current.wind_direction_10m
+                        wind_direction_10m = ApiWeather.current.wind_direction_10m,
+                        wind_direction_10m_compass = ApiWeather.current.wind_direction_10m_compass
                     }
                 };
 

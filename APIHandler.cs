@@ -74,7 +74,7 @@ namespace Environmental_Monitor
                 logger.Info($"Snowfall: {weather.current.snowfall} inches");
                 logger.Info($"Precipitation: {weather.current.precipitation} inches");
                 logger.Info($"Wind Speed: {weather.current.wind_speed_10m} miles per hour");
-                logger.Info($"Wind Direction: {weather.current.wind_direction_10m} degrees");
+                logger.Info($"Wind Direction: {weather.current.wind_direction_10m_compass} ({weather.current.wind_direction_10m} degrees)");
 
                 // Return the deserialized weather response
                 return weather;
