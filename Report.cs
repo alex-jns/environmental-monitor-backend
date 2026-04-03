@@ -25,6 +25,11 @@ namespace Environmental_Monitor
         DateTime Time;
 
         /// <summary>
+        /// Represents the returned value from the InsideWeatherSummary method, which is a quick and concise summary of the inside weather for the dashboard.
+        /// </summary>
+        string InsideSummary => InsideWeatherSummary();
+
+        /// <summary>
         /// Constructor for the Report class, takes in a UDP message and an API response.
         /// </summary>
         /// <param name="udpMessage">Represents the weather data received from the pi via UDP message.</param>
@@ -76,21 +81,31 @@ namespace Environmental_Monitor
             }
             catch (NullReferenceException ex)
             {
-                logger.Error($"Null reference exception in GenerateReport: {ex.Message}");
+                logger.Error($"Message or ApiWeather values are null: {ex.Message}");
                 return;
             }
-
-            // can probably delete this section later
-            logger.Info($"[Time] {Time.ToString("f")}");
-            logger.Info($"[Inside] Temp F: {Message.temperatureF}, Temp C: {Message.temperatureC}, Humidity: {Message.humidity}");
-            logger.Info($"[Outside] Temp F: {ApiWeather.current.temperature_2m_fahrenheit}, Temp C: {ApiWeather.current.temperature_2m}, Humidity: {ApiWeather.current.relative_humidity_2m}");
 
             // The file name for the report should have the date and time
             string reportFilePath = $"reports/report_{DateTime.Now:yyyy-MM-dd_HH-mm-ss}.txt";
 
             // Create the report directory if none exists
             string? directory = Path.GetDirectoryName(reportFilePath);
-            if (directory == null) { throw new NullReferenceException(nameof(directory)); }
+
+            // Guard null directory, throw ex if null
+            try
+            {
+                if (directory == null)
+                {
+                    throw new NullReferenceException(nameof(directory));
+                }
+            }
+            catch (NullReferenceException ex)
+            {
+                logger.Error($"Null reference exception when getting directory name: {ex.Message}");
+                return;
+            }
+
+            // Create directory if it does not exist
             if (!Directory.Exists(directory)) { Directory.CreateDirectory(directory); }
 
             // If there is no report for the time slot make one
@@ -120,6 +135,7 @@ namespace Environmental_Monitor
                 sb.AppendLine($"Precipitation: {ApiWeather.current.precipitation} inches");
                 sb.AppendLine($"Wind Speed: {ApiWeather.current.wind_speed_10m} miles per hour");
                 sb.AppendLine($"Wind Direction: {ApiWeather.current.wind_direction_10m} degrees");
+                sb.AppendLine($"Inside Weather Summary: {InsideSummary}");
 
                 // Try to catch file I/O exceptions when writing the report, log any errors that occur
                 try { File.AppendAllText(reportFilePath, sb.ToString()); }
@@ -164,7 +180,8 @@ namespace Environmental_Monitor
                         showers = ApiWeather.current.showers,
                         snowfall = ApiWeather.current.snowfall,
                         wind_speed_10m = ApiWeather.current.wind_speed_10m,
-                        wind_direction_10m = ApiWeather.current.wind_direction_10m
+                        wind_direction_10m = ApiWeather.current.wind_direction_10m,
+                        inside_weather_summary = InsideSummary
                     }
                 };
 
@@ -475,6 +492,76 @@ namespace Environmental_Monitor
 
             logger.Info($"Wrote monthly report: {outPath}");
             Console.WriteLine(sb.ToString());
+        }
+
+        /// <summary>
+        /// Provides a quick and concise summary of the inside weather for the dashboard.
+        /// </summary>
+        /// <returns>A string summary of the inside weather for the dashboard.</returns>
+        public string InsideWeatherSummary()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            try { if (Message == null) { throw new ArgumentNullException("Message"); } }
+            catch (ArgumentNullException ex)
+            {
+                Logger logger = new Logger("logs/report.log");
+                logger.Error($"Message is null in InsideWeatherSummary: {ex.Message}");
+                return "No inside weather data available.";
+            }
+
+            // Truncate decimals
+            int tempF = (int)Message.temperatureF;
+
+            if (tempF >= 80) // 80+ F range - hot
+            {
+                sb.Append($"It's {tempF} inside, it's pretty hot!");
+                sb.Append(" Consider wearing light and breathable clothes, and stay hydrated.");
+            }
+            else if (tempF >= 65) // 65-80 F range - warm/comfortable
+            {
+                sb.Append($"It's {tempF} inside, it's a comfortable temperature.");
+                sb.Append(" Enjoy your day!");
+            }
+            else if (tempF >= 50) // 50-65 F range - cool
+            {
+                sb.Append($"It's {tempF} inside, it's a bit cool.");
+                sb.Append(" Consider wearing long sleeves with jeans along with a sweater or hoodie.");
+            }
+            else if (tempF >= 35) // 35-50 F range - chilly
+            {
+                sb.Append($"It's {tempF} inside, it's quite chilly.");
+                sb.Append(" Consider wearing a sweater and long pants with a jacket or a coat.");
+            }
+            else if (tempF >= 20) // 20-25 F range - cold
+            {
+                sb.Append($"It's {tempF} inside, it's very cold.");
+                sb.Append(" Stay warm with heavy layers! A coat, hat, and gloves are recommended.");
+            }
+            else // Below 20 F - freezing
+            {
+                sb.Append($"It's {tempF} inside, it's freezing!");
+                sb.Append(" Make sure to bundle up with heavy layers, a coat, hat, and gloves.");
+            }
+
+            if (Message.humidity >= 80) // 80%+ humidity - very humid
+            {
+                sb.Append(" It's also very humid! Stay cool, hydrate, and avoid dark or heavy clothes.");
+            }
+            else if (Message.humidity >= 60) // 60-80% humidity - humid
+            {
+                sb.Append(" It's also quite humid. Consider wearing breathable fabrics and stay hydrated.");
+            }
+            else if (Message.humidity >= 30) // 30-60% humidity - comfortable
+            {
+                sb.Append(" The humidity level is comfortable.");
+            }
+            else // Below 30% humidity - dry
+            {
+                sb.Append(" Also the air is quite dry. Consider using a moisturizer and staying hydrated.");
+            }
+
+            return sb.ToString();
         }
 
         /// <summary>
