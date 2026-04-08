@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Runtime.ConstrainedExecution;
+using System.Text;
 
 namespace Environmental_Monitor
 {
@@ -227,7 +228,7 @@ namespace Environmental_Monitor
         public List<double>? temperature_2m_max { get; set; }
 
         /// <summary>
-        /// 
+        /// Converts daily maximum temp to fahrenheit.
         /// </summary>
         public double temperature_2m_max_fahrenheit
         {
@@ -245,7 +246,7 @@ namespace Environmental_Monitor
         public List<double>? temperature_2m_min { get; set; }
 
         /// <summary>
-        /// 
+        /// Converts daily minimum temp to fahrenheit.
         /// </summary>
         public double temperature_2m_min_fahrenheit 
         {

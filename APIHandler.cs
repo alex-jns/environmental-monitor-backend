@@ -17,6 +17,7 @@ namespace Environmental_Monitor
             // Set up the logger
             Logger logger = new Logger("logs/api.log");
 
+            // Define the query parameters for the API request
             var queryParams = new Dictionary<string, string>()
             {
                 { "latitude", "36.5951" },
@@ -29,25 +30,18 @@ namespace Environmental_Monitor
                 { "daily", "temperature_2m_max,temperature_2m_min,precipitation_probability_max" }
             };
 
-            string requestUri = "https://api.open-meteo.com/v1/forecast?";
-
-            var query = HttpUtility.ParseQueryString(string.Empty);
-
-            foreach (var param in queryParams)
-            {
-                query[param.Key] = param.Value;
-            }
-
-            string fullRequestUri = requestUri + query.ToString();
-
-            Console.WriteLine(fullRequestUri);
-
-            using HttpClient client = new HttpClient();
-
             // See below for a list of exceptions
             try
             {
+                // Construct the full request URI with query parameters
+                var query = HttpUtility.ParseQueryString(string.Empty);
+                foreach (var param in queryParams) { query[param.Key] = param.Value; }
+                string requestUri = "https://api.open-meteo.com/v1/forecast?";
+                string fullRequestUri = requestUri + query.ToString();
+                logger.Info($"Constructed API request URI: {fullRequestUri}");
+
                 // Sends the request, and handles the response
+                using HttpClient client = new HttpClient();
                 logger.Info("Sending a request to the API...");
                 HttpResponseMessage response = await client.GetAsync(fullRequestUri);
                 logger.Info("Request sent. Awaiting response...");

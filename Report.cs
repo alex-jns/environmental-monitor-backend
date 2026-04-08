@@ -30,6 +30,11 @@ namespace Environmental_Monitor
         string InsideSummary => InsideWeatherSummary();
 
         /// <summary>
+        /// Represents the returned value from the OutsideWeatherSummary method, which is a quick and concise summary of the outside weather for the dashboard.
+        /// </summary>
+        string OutsideSummary => OutsideWeatherSummary();
+
+        /// <summary>
         /// Constructor for the Report class, takes in a UDP message and an API response.
         /// </summary>
         /// <param name="udpMessage">Represents the weather data received from the pi via UDP message.</param>
@@ -191,7 +196,8 @@ namespace Environmental_Monitor
                         snowfall = ApiWeather.current.snowfall,
                         wind_speed_10m = ApiWeather.current.wind_speed_10m,
                         wind_direction_10m = ApiWeather.current.wind_direction_10m,
-                        wind_direction_10m_compass = ApiWeather.current.wind_direction_10m_compass
+                        wind_direction_10m_compass = ApiWeather.current.wind_direction_10m_compass,
+                        outside_summary = OutsideSummary
                     },
                     daily = new
                     {
@@ -578,6 +584,39 @@ namespace Environmental_Monitor
             {
                 sb.Append(" Also the air is quite dry. Consider using a moisturizer and staying hydrated.");
             }
+
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// Represents a quick and concise summary of the outside weather for the dashboard.
+        /// </summary>
+        /// <returns>A string containing the outside weather summary.</returns>
+        public string OutsideWeatherSummary()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            try
+            {
+                if (ApiWeather == null) { throw new ArgumentNullException("ApiWeather"); }
+                if (ApiWeather.current == null) { throw new ArgumentNullException("ApiWeather.current"); }
+                if (ApiWeather.daily == null) { throw new ArgumentNullException("ApiWeather.daily"); }
+                if (ApiWeather.daily.temperature_2m_max == null) { throw new ArgumentNullException("ApiWeather.daily.temperature_2m_max"); }
+                if (ApiWeather.daily.temperature_2m_min == null) { throw new ArgumentNullException("ApiWeather.daily.temperature_2m_min"); }
+                if (ApiWeather.daily.precipitation_probability_max == null) { throw new ArgumentNullException("ApiWeather.daily.precipitation_probability_max"); }
+            }
+            catch (ArgumentNullException ex)
+            {
+                Logger logger = new Logger("logs/report.log");
+                logger.Error($"ApiWeather is null in OutsideWeatherSummary: {ex.Message}");
+                return "No outside weather data available.";
+            }
+
+
+            
+            sb.Append($"{ApiWeather.current.weather_name} with a high of {ApiWeather.daily.temperature_2m_max_fahrenheit:F0} and a low of {ApiWeather.daily.temperature_2m_min_fahrenheit:F0} today. ");
+            sb.Append($"It's currently {ApiWeather.current.temperature_2m_fahrenheit:F0} outside with {ApiWeather.current.relative_humidity_2m:F0}% humidity. ");
+            sb.Append($"There is a {ApiWeather.daily.precipitation_probability_max[0]:0.##}% chance of precipitation.");
 
             return sb.ToString();
         }
