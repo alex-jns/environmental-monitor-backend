@@ -78,6 +78,10 @@ namespace Environmental_Monitor
                 if (Message == null) { throw new NullReferenceException(nameof(Message)); }
                 if (ApiWeather == null) { throw new NullReferenceException(nameof(ApiWeather)); }
                 if (ApiWeather.current == null) { throw new NullReferenceException(nameof(ApiWeather.current)); }
+                if (ApiWeather.daily == null) { throw new NullReferenceException(nameof(ApiWeather.daily)); }
+                if (ApiWeather.daily.temperature_2m_max == null) { throw new NullReferenceException(nameof(ApiWeather.daily.temperature_2m_max)); }
+                if (ApiWeather.daily.temperature_2m_min == null) { throw new NullReferenceException(nameof(ApiWeather.daily.temperature_2m_min)); }
+                if (ApiWeather.daily.precipitation_probability_max == null) { throw new NullReferenceException(nameof(ApiWeather.daily.precipitation_probability_max)); }
             }
             catch (NullReferenceException ex)
             {
@@ -136,6 +140,11 @@ namespace Environmental_Monitor
                 sb.AppendLine($"Wind Speed: {ApiWeather.current.wind_speed_10m} miles per hour");
                 sb.AppendLine($"Wind Direction: {ApiWeather.current.wind_direction_10m_compass} ({ApiWeather.current.wind_direction_10m} degrees)");
                 sb.AppendLine($"Inside Weather Summary: {InsideSummary}");
+                sb.AppendLine($"Outside Max Temp: {ApiWeather.daily.temperature_2m_max[0]} C");
+                sb.AppendLine($"Outside Max Temp: {ApiWeather.daily.temperature_2m_max_fahrenheit} F");
+                sb.AppendLine($"Outside Min Temp: {ApiWeather.daily.temperature_2m_min[0]} C");
+                sb.AppendLine($"Outside Min Temp: {ApiWeather.daily.temperature_2m_min_fahrenheit} F");
+                sb.AppendLine($"Outside Chance of Precipitation: {ApiWeather.daily.precipitation_probability_max[0]}%");
 
                 // Try to catch file I/O exceptions when writing the report, log any errors that occur
                 try { File.AppendAllText(reportFilePath, sb.ToString()); }
@@ -183,6 +192,14 @@ namespace Environmental_Monitor
                         wind_speed_10m = ApiWeather.current.wind_speed_10m,
                         wind_direction_10m = ApiWeather.current.wind_direction_10m,
                         wind_direction_10m_compass = ApiWeather.current.wind_direction_10m_compass
+                    },
+                    daily = new
+                    {
+                        temperature_2m_max = ApiWeather.daily.temperature_2m_max[0],
+                        temperature_2m_max_fahrenheit = ApiWeather.daily.temperature_2m_max_fahrenheit,
+                        temperature_2m_min = ApiWeather.daily.temperature_2m_min[0],
+                        temperature_2m_min_fahrenheit = ApiWeather.daily.temperature_2m_min_fahrenheit,
+                        precipitation_probability_max = ApiWeather.daily.precipitation_probability_max[0]
                     }
                 };
 

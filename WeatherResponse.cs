@@ -12,6 +12,11 @@ namespace Environmental_Monitor
         /// Matches the object contained within the JSON response.
         /// </summary>
         public CurrentWeather? current { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public DailyWeather? daily { get; set; }
     }
 
     /// <summary>
@@ -209,5 +214,52 @@ namespace Environmental_Monitor
             }
             set { }
         }
+    }
+
+    /// <summary>
+    /// Represents the daily weather forecast.
+    /// </summary>
+    public class DailyWeather
+    {
+        /// <summary>
+        /// Maximum temperature at 2 meters above ground for the day.
+        /// </summary>
+        public List<double>? temperature_2m_max { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public double temperature_2m_max_fahrenheit
+        {
+            get
+            {
+                if (temperature_2m_max == null) { return 0; }
+                else { return (temperature_2m_max[0] * 9 / 5) + 32; }
+            }
+            set { }
+        }
+
+        /// <summary>
+        /// Minimum temperature at 2 meters above ground for the day.
+        /// </summary>
+        public List<double>? temperature_2m_min { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public double temperature_2m_min_fahrenheit 
+        {
+            get
+            {
+                if (temperature_2m_min == null) { return 0; }
+                else { return (temperature_2m_min[0] * 9 / 5) + 32; }
+            }
+            set { }
+        }
+
+        /// <summary>
+        /// Total precipitation for the day.
+        /// </summary>
+        public List<double>? precipitation_probability_max { get; set; }   
     }
 }

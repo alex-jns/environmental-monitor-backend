@@ -25,7 +25,8 @@ namespace Environmental_Monitor
                 { "timezone", "America/New_York" },
                 { "forecast_days", "1" },
                 { "wind_speed_unit", "ms" },
-                { "precipitation_unit", "inch" }
+                { "precipitation_unit", "inch" },
+                { "daily", "temperature_2m_max,temperature_2m_min,precipitation_probability_max" }
             };
 
             string requestUri = "https://api.open-meteo.com/v1/forecast?";
@@ -58,6 +59,10 @@ namespace Environmental_Monitor
                 if (weather == null) { throw new NullReferenceException(nameof(weather)); }
                 if (weather.current == null) { throw new NullReferenceException(nameof(weather.current)); }
                 if (weather.current.time == null) { throw new NullReferenceException(nameof(weather.current.time)); }
+                if (weather.daily == null) { throw new NullReferenceException(nameof(weather.daily)); }
+                if (weather.daily.temperature_2m_max == null) { throw new NullReferenceException(nameof(weather.daily.temperature_2m_max)); }
+                if (weather.daily.temperature_2m_min == null) { throw new NullReferenceException(nameof(weather.daily.temperature_2m_min)); }
+                if (weather.daily.precipitation_probability_max == null) { throw new NullReferenceException(nameof(weather.daily.precipitation_probability_max)); }
 
                 // Attempt to parse time from ISO 8601 to something readable
                 logger.Info("Parsing time...");
@@ -81,6 +86,11 @@ namespace Environmental_Monitor
                 logger.Info($"Precipitation: {weather.current.precipitation} inches");
                 logger.Info($"Wind Speed: {weather.current.wind_speed_10m} miles per hour");
                 logger.Info($"Wind Direction: {weather.current.wind_direction_10m_compass} ({weather.current.wind_direction_10m} degrees)");
+                logger.Info($"Outside Max Temp: {weather.daily.temperature_2m_max[0]} C");
+                logger.Info($"Outside Max Temp: {weather.daily.temperature_2m_max_fahrenheit} F");
+                logger.Info($"Outside Min Temp: {weather.daily.temperature_2m_min[0]} C");
+                logger.Info($"Outside Min Temp: {weather.daily.temperature_2m_min_fahrenheit} F");
+                logger.Info($"Chance of Precipitation: {weather.daily.precipitation_probability_max[0]} F");
 
                 // Return the deserialized weather response
                 return weather;
