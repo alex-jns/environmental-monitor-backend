@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using System.Web;
 
 namespace Environmental_Monitor
 {
@@ -16,25 +17,30 @@ namespace Environmental_Monitor
             // Set up the logger
             Logger logger = new Logger("logs/api.log");
 
-            // Setting up the request
-            string requestUri = "https://api.open-meteo.com/v1/forecast?" +
-                "latitude=36.5951&" +
-                "longitude=-82.1887&" +
-                "current=temperature_2m," +
-                "relative_humidity_2m," +
-                "apparent_temperature," +
-                "is_day," +
-                "weather_code," +
-                "cloud_cover," +
-                "precipitation," +
-                "rain,showers," +
-                "snowfall," +
-                "wind_speed_10m," +
-                "wind_direction_10m&" +
-                "timezone=America%2FNew_York&" +
-                "forecast_days=1&" +
-                "wind_speed_unit=ms&" +
-                "precipitation_unit=inch";
+            var queryParams = new Dictionary<string, string>()
+            {
+                { "latitude", "36.5951" },
+                { "longitude", "-82.1887" },
+                { "current", "temperature_2m,relative_humidity_2m,apparent_temperature,is_day,weather_code,cloud_cover,precipitation,rain,showers,snowfall,wind_speed_10m,wind_direction_10m" },
+                { "timezone", "America/New_York" },
+                { "forecast_days", "1" },
+                { "wind_speed_unit", "ms" },
+                { "precipitation_unit", "inch" }
+            };
+
+            string requestUri = "https://api.open-meteo.com/v1/forecast?";
+
+            var query = HttpUtility.ParseQueryString(string.Empty);
+
+            foreach (var param in queryParams)
+            {
+                query[param.Key] = param.Value;
+            }
+
+            string fullRequestUri = requestUri + query.ToString();
+
+            Console.WriteLine(fullRequestUri);
+
             using HttpClient client = new HttpClient();
 
             // See below for a list of exceptions
@@ -42,7 +48,7 @@ namespace Environmental_Monitor
             {
                 // Sends the request, and handles the response
                 logger.Info("Sending a request to the API...");
-                HttpResponseMessage response = await client.GetAsync(requestUri);
+                HttpResponseMessage response = await client.GetAsync(fullRequestUri);
                 logger.Info("Request sent. Awaiting response...");
                 string result = await response.Content.ReadAsStringAsync();
                 logger.Info("Response received. Validating response...");
