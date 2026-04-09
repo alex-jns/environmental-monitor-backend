@@ -452,15 +452,6 @@ namespace Environmental_Monitor
                 return;
             }
 
-            // "Re-create him in the aggregate" - Billy Beane
-            double avgInsideF = reports.Average(x => x.inside.temperatureF);
-            double avgInsideC = reports.Average(x => x.inside.temperatureC);
-            double avgInsideHumidity = reports.Average(x => x.inside.humidity);
-
-            double avgOutsideF = reports.Average(x => x.outside.temperature_2m_fahrenheit);
-            double avgOutsideC = reports.Average(x => x.outside.temperature_2m);
-            double avgOutsideHumidity = reports.Average(x => x.outside.relative_humidity_2m);
-
             // Use the provided start and end dates for the report labels, if they are not provided use "earliest" and "latest" as appropriate
             string startLabel = startDate?.ToString("yyyy-MM-dd") ?? "earliest";
             string endLabel = endDate?.ToString("yyyy-MM-dd") ?? "latest";
@@ -478,9 +469,17 @@ namespace Environmental_Monitor
             sb.AppendLine($"Ending Temp C: {reports.Last().inside.temperatureC}");
             sb.AppendLine($"Ending Humidity: {reports.Last().inside.humidity}%");
 
-            sb.AppendLine($"Delta Temp F: {reports.Last().inside.temperatureF - reports.First().inside.temperatureF:+0.##;-0.##;0}");
-            sb.AppendLine($"Delta Temp C: {reports.Last().inside.temperatureC - reports.First().inside.temperatureC:+0.##;-0.##;0}");
-            sb.AppendLine($"Delta Humidity: {reports.Last().inside.humidity - reports.First().inside.humidity:+0.##;-0.##;0}%");
+            double insideDeltaTempF = reports.Last().inside.temperatureF - reports.First().inside.temperatureF;
+            double insideDeltaTempC = reports.Last().inside.temperatureC - reports.First().inside.temperatureC;
+            double insideDeltaHumidity = reports.Last().inside.humidity - reports.First().inside.humidity;
+
+            sb.AppendLine($"Delta Temp F: {insideDeltaTempF:+0.##;-0.##;0}");
+            sb.AppendLine($"Delta Temp C: {insideDeltaTempC:+0.##;-0.##;0}");
+            sb.AppendLine($"Delta Humidity: {insideDeltaHumidity:+0.##;-0.##;0}%");
+
+            double avgInsideF = reports.Average(x => x.inside.temperatureF);
+            double avgInsideC = reports.Average(x => x.inside.temperatureC);
+            double avgInsideHumidity = reports.Average(x => x.inside.humidity);
 
             sb.AppendLine($"Average Temp F: {avgInsideF:F2}");
             sb.AppendLine($"Average Temp C: {avgInsideC:F2}");
@@ -495,9 +494,17 @@ namespace Environmental_Monitor
             sb.AppendLine($"Ending Temp C: {reports.Last().outside.temperature_2m}");
             sb.AppendLine($"Ending Humidity: {reports.Last().outside.relative_humidity_2m}%");
 
-            sb.AppendLine($"Delta Temp F: {reports.Last().outside.temperature_2m_fahrenheit - reports.First().outside.temperature_2m_fahrenheit:+0.##;-0.##;0}");
-            sb.AppendLine($"Delta Temp C: {reports.Last().outside.temperature_2m - reports.First().outside.temperature_2m:+0.##;-0.##;0}");
-            sb.AppendLine($"Delta Humidity: {reports.Last().outside.relative_humidity_2m - reports.First().outside.relative_humidity_2m:+0.##;-0.##;0}%");
+            double outsideDeltaTempF = reports.Last().outside.temperature_2m_fahrenheit - reports.First().outside.temperature_2m_fahrenheit;
+            double outsideDeltaTempC = reports.Last().outside.temperature_2m - reports.First().outside.temperature_2m;
+            double outsideDeltaHumidity = reports.Last().outside.relative_humidity_2m - reports.First().outside.relative_humidity_2m;
+
+            sb.AppendLine($"Delta Temp F: {outsideDeltaTempF:+0.##;-0.##;0}");
+            sb.AppendLine($"Delta Temp C: {outsideDeltaTempC:+0.##;-0.##;0}");
+            sb.AppendLine($"Delta Humidity: {outsideDeltaHumidity:+0.##;-0.##;0}%");
+
+            double avgOutsideF = reports.Average(x => x.outside.temperature_2m_fahrenheit);
+            double avgOutsideC = reports.Average(x => x.outside.temperature_2m);
+            double avgOutsideHumidity = reports.Average(x => x.outside.relative_humidity_2m);
 
             sb.AppendLine($"Average Temp F: {avgOutsideF:F2}");
             sb.AppendLine($"Average Temp C: {avgOutsideC:F2}");
@@ -516,6 +523,57 @@ namespace Environmental_Monitor
 
             logger.Info($"Wrote monthly report: {outPath}");
             Console.WriteLine(sb.ToString());
+
+            string monthlyReportFilePath = "monthly/latest_monthly.json";
+
+            var monthlyReportObject = new
+            {
+                starting_date = startLabel,
+                ending_date = endLabel,
+                sample_count = reports.Count,
+                inside = new
+                {
+                    starting_temperatureF = reports.First().inside.temperatureF,
+                    starting_temperatureC = reports.First().inside.temperatureC,
+                    starting_humidity = reports.First().inside.humidity,
+                    ending_temperatureF = reports.Last().inside.temperatureF,
+                    ending_temperatureC = reports.Last().inside.temperatureC,
+                    ending_humidity = reports.Last().inside.humidity,
+                    delta_temperatureF = insideDeltaTempF,
+                    delta_temperatureC = insideDeltaTempC,
+                    delta_humidity = insideDeltaHumidity,
+                    average_temperatureF = avgInsideF,
+                    average_temperatureC = avgInsideC,
+                    average_humidity = avgInsideHumidity
+                },
+                outside = new
+                {
+                    starting_temperatureF = reports.First().outside.temperature_2m_fahrenheit,
+                    starting_temperatureC = reports.First().outside.temperature_2m,
+                    starting_humidity = reports.First().outside.relative_humidity_2m,
+                    ending_temperatureF = reports.Last().outside.temperature_2m_fahrenheit,
+                    ending_temperatureC = reports.Last().outside.temperature_2m,
+                    ending_humidity = reports.Last().outside.relative_humidity_2m,
+                    delta_temperatureF = outsideDeltaTempF,
+                    delta_temperatureC = outsideDeltaTempC,
+                    delta_humidity = outsideDeltaHumidity,
+                    average_temperatureF = avgOutsideF,
+                    average_temperatureC = avgOutsideC,
+                    average_humidity = avgOutsideHumidity
+                }
+            };
+
+            var jsonOptions = new JsonSerializerOptions { WriteIndented = true };
+
+            // Try to catch file I/O exceptions when writing the JSON report, log any errors that occur
+            try { File.WriteAllText(monthlyReportFilePath, JsonSerializer.Serialize(monthlyReportObject, jsonOptions)); }
+            catch (ArgumentException ex) { logger.Error($"Invalid path for monthly report: {ex.Message}"); return; }
+            catch (IOException ex) { logger.Error($"IO error writing monthly report: {ex.Message}"); return; }
+            catch (UnauthorizedAccessException ex) { logger.Error($"Access denied writing monthly report: {ex.Message}"); return; }
+            catch (NotSupportedException ex) { logger.Error($"Unsupported path for monthly report: {ex.Message}"); return; }
+            catch (Exception ex) { logger.Error($"Failed to write monthly report: {ex.Message}"); return; }
+
+            logger.Info($"Wrote JSON report to {monthlyReportFilePath}");
         }
 
         /// <summary>
