@@ -7,7 +7,7 @@ namespace Environmental_Monitor
     /// <summary>
     /// Matches the structure of the JSON object.
     /// </summary>
-    internal class WeatherResponse
+    public class WeatherResponse
     {
         /// <summary>
         /// Matches the object contained within the JSON response.

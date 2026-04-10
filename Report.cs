@@ -7,32 +7,32 @@ namespace Environmental_Monitor
     /// <summary>
     /// This class represents the combined information from the UDP message received from the pi and the API response from the weather API.
     /// </summary>
-    internal class Report
+    public class Report
     {
         /// <summary>
         /// Represents the weather data received from the pi via UDP message.
         /// </summary>
-        UdpMessage? Message;
+        public UdpMessage? Message { get; set; }
 
         /// <summary>
         /// Represents the weather data received from the API response.
         /// </summary>
-        WeatherResponse? ApiWeather;
+        public WeatherResponse? ApiWeather { get; set; }
 
         /// <summary>
         /// Represents the time parsed from the API response.
         /// </summary>
-        DateTime Time;
+        public DateTime Time { get; set; }
 
         /// <summary>
         /// Represents the returned value from the InsideWeatherSummary method, which is a quick and concise summary of the inside weather for the dashboard.
         /// </summary>
-        string InsideSummary => InsideWeatherSummary();
+        public string InsideSummary => InsideWeatherSummary();
 
         /// <summary>
         /// Represents the returned value from the OutsideWeatherSummary method, which is a quick and concise summary of the outside weather for the dashboard.
         /// </summary>
-        string OutsideSummary => OutsideWeatherSummary();
+        public string OutsideSummary => OutsideWeatherSummary();
 
         /// <summary>
         /// Constructor for the Report class, takes in a UDP message and an API response.
