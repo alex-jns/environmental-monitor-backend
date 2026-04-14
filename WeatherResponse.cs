@@ -18,6 +18,16 @@ namespace Environmental_Monitor
         /// 
         /// </summary>
         public DailyWeather? daily { get; set; }
+
+        /// <summary>
+        /// Latitude of the location to get weather from.
+        /// </summary>
+        public double latitude { get; set; }
+
+        /// <summary>
+        /// Longitude of the location to get weather from.
+        /// </summary>
+        public double longitude { get; set; }
     }
 
     /// <summary>

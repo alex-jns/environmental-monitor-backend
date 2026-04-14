@@ -346,9 +346,7 @@ namespace Environmental_Monitor
             }
 
             // Show the user the earliest available report date for reference when entering the start date
-            string earliestReport = jsonFiles.OrderBy(f => File.GetLastWriteTimeUtc(f)).First();
-            Match earliestReportDate = Regex.Match(earliestReport, @"\d{4}-\d{2}-\d{2}");
-            Console.WriteLine($"Earliest report date is: {earliestReportDate}");
+            string earliestReportDate = CheckEarliestReportDate(jsonFiles);
 
             // Prompt the user to enter a start date for the report, with the option to use the earliest available report if they just press Enter
             Console.WriteLine("Enter start date (yyyy-MM-dd) or press Enter for earliest:");
@@ -368,7 +366,7 @@ namespace Environmental_Monitor
                 DateTime availableDate;
 
                 // If parse is successful and the user provided start date is earlier than the earliest available report date, adjust the start date to the earliest available report date
-                if (DateTime.TryParse(earliestReportDate.Value, out availableDate) && startDate < availableDate)
+                if (DateTime.TryParse(earliestReportDate, out availableDate) && startDate < availableDate)
                 {
                     Console.WriteLine($"Start date is earlier than the earliest available report date ({availableDate:yyyy-MM-dd}). Adjusting start date to {availableDate:yyyy-MM-dd}.");
 
@@ -378,9 +376,7 @@ namespace Environmental_Monitor
             }
 
             // Show the user the latest available report date for reference when entering the end date
-            string latestReport = jsonFiles.OrderByDescending(f => File.GetLastWriteTimeUtc(f)).First();
-            Match latestReportDate = Regex.Match(latestReport, @"\d{4}-\d{2}-\d{2}");
-            Console.WriteLine($"Latest report date is: {latestReportDate}");
+            string latestReportDate = CheckLatestReportDate(jsonFiles);
 
             // Prompt the user to enter an end date for the report, with the option to use the latest available report if they just press Enter
             Console.WriteLine("Enter end date (yyyy-MM-dd) or press Enter for latest:");
@@ -400,7 +396,7 @@ namespace Environmental_Monitor
                 DateTime availableDate;
 
                 // If parse is successful and the user provided end date is later than the latest available report date, adjust the end date to the latest available report date
-                if (DateTime.TryParse(latestReportDate.Value, out availableDate) && endDate > availableDate)
+                if (DateTime.TryParse(latestReportDate, out availableDate) && endDate > availableDate)
                 {
                     Console.WriteLine($"End date is later than the latest available report date ({availableDate:yyyy-MM-dd}). Adjusting end date to {availableDate:yyyy-MM-dd}.");
 
@@ -574,6 +570,31 @@ namespace Environmental_Monitor
             catch (Exception ex) { logger.Error($"Failed to write monthly report: {ex.Message}"); return; }
 
             logger.Info($"Wrote JSON report to {monthlyReportFilePath}");
+        }
+
+        /// <summary>
+        /// Takes a directory of *.json files and returns the earliest date in the file name.
+        /// </summary>
+        /// <param name="jsonFiles">Directory of *.json files which holds the reports.</param>
+        /// <returns>The earliest date found in the file names.</returns>
+        public static string CheckEarliestReportDate(string[] jsonFiles)
+        {
+            // Show the user the earliest available report date for reference when entering the start date
+            string earliestReport = jsonFiles.OrderBy(f => File.GetLastWriteTimeUtc(f)).First();
+            Match earliestReportDate = Regex.Match(earliestReport, @"\d{4}-\d{2}-\d{2}");
+            return earliestReportDate.Value;
+        }
+
+        /// <summary>
+        /// Takes a directory of *.json files and returns the latest date in the file name.
+        /// </summary>
+        /// <param name="jsonFiles">Directory of *.json files which holds the reports.</param>
+        /// <returns>The latest date found in the file names.</returns>
+        public static string CheckLatestReportDate(string[] jsonFiles)
+        {
+            string latestReport = jsonFiles.OrderByDescending(f => File.GetLastWriteTimeUtc(f)).First();
+            Match latestReportDate = Regex.Match(latestReport, @"\d{4}-\d{2}-\d{2}");
+            return latestReportDate.Value;
         }
 
         /// <summary>

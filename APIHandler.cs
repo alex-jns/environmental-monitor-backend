@@ -12,7 +12,7 @@ namespace Environmental_Monitor
         /// Sends a GET request to the Open-Meteo Uri and deseralizes the returned JSON.
         /// </summary>
         /// <returns>Task representing the async operation.</returns>
-        public async Task<WeatherResponse?> CallAPI()
+        public async Task<WeatherResponse?> CallAPI(double latitude, double longitude)
         {
             // Set up the logger
             Logger logger = new Logger("logs/api.log");
@@ -20,8 +20,8 @@ namespace Environmental_Monitor
             // Define the query parameters for the API request
             var queryParams = new Dictionary<string, string>()
             {
-                { "latitude", "36.5951" },
-                { "longitude", "-82.1887" },
+                { "latitude", latitude.ToString() },
+                { "longitude", longitude.ToString() },
                 { "current", "temperature_2m,relative_humidity_2m,apparent_temperature,is_day,weather_code,cloud_cover,precipitation,rain,showers,snowfall,wind_speed_10m,wind_direction_10m" },
                 { "timezone", "America/New_York" },
                 { "forecast_days", "1" },
@@ -64,6 +64,7 @@ namespace Environmental_Monitor
 
                 // Show the information
                 logger.Info($"Time: {time.ToString("f")}"); // full readable format
+                logger.Info($"Latitude and Longitude: {weather.latitude}, {weather.longitude}");
                 logger.Info($"Temp: {weather.current.temperature_2m} C");
                 logger.Info($"Temp: {weather.current.temperature_2m_fahrenheit} F");
                 logger.Info($"Humidity: {weather.current.relative_humidity_2m}%");
